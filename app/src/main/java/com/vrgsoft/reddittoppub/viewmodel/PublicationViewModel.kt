@@ -6,12 +6,12 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.BaseObservable
 import androidx.databinding.BindingAdapter
+import com.vrgsoft.reddittoppub.R
 import com.vrgsoft.reddittoppub.model.Publication
 import java.io.File
 import java.io.FileOutputStream
@@ -23,12 +23,18 @@ class PublicationViewModel(private var publication: Publication) : BaseObservabl
     private var thumbnail: String = publication.thumbnail
     private var numComments: Int = publication.numComments
     private var bitmapThumbnail: Bitmap? = publication.bitmapThumbnail
+    private val TAG: String = "PublicationViewModel"
 
     companion object {
         @BindingAdapter("imageUrl")
         @JvmStatic
-        fun loadImage(imageView: ImageView, bitmap: Bitmap) {
+        fun loadImage(imageView: ImageView, bitmap: Bitmap/* uri: String*/) {
+            Log.i("TAG", "bitmap")
             imageView.setImageBitmap(bitmap)
+
+            //if (bitmap != null) {
+                //imageView.setImageResource(R.drawable.ic_launcher_foreground)
+            //}
             // https://medium.com/@gunayadem.dev/boost-your-android-apps-with-koin-and-coroutines-using-mvvm-in-kotlin-d30fe436ab4c
             // https://medium.com/@gunayadem.dev/add-a-click-listener-to-your-adapter-using-mvvm-in-kotlin-part-2-9dce852e96d5
         }

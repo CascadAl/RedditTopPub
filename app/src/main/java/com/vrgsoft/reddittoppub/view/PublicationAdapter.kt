@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import android.widget.AbsListView.OnScrollListener
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +36,10 @@ class PublicationAdapter(private val context: Context,
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val binding: PublicListLayoutBinding
+
+        /*if ((parent as ListView).lastVisiblePosition < position) {
+            return convertView!!
+        }*/
 
         if (convertView == null) {
             binding = PublicListLayoutBinding.inflate(LayoutInflater.from(context), parent, false)
