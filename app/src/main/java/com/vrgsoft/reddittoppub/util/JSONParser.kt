@@ -20,7 +20,7 @@ class JSONParser {
                 var data = res.getJSONObject(i).getJSONObject("data")
 
                 val id: String = data.getString("id")
-                val author: String = "$i) " + data.getString("author")
+                val author: String = data.getString("author")
                 val created: Long = PublicationUtil.getHoursAgo(data.getLong("created_utc"))
                 val thumbnail: String = data.getString("thumbnail")
                 val numComments: Int = data.getInt("num_comments")

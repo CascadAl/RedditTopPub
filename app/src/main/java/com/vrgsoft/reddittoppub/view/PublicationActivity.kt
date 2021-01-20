@@ -102,6 +102,7 @@ class PublicationActivity : AppCompatActivity(), AbsListView.OnScrollListener {
 
                     adapter.item = paginationTitleList
                     dataBinding.lvList.adapter = adapter
+                    dataBinding.lvList.requestFocusFromTouch()
                     dataBinding.lvList.setSelection(firstVisibleItemL)
                     dataBinding.mainProgress.visibility = View.GONE
 
