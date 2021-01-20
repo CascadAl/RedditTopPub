@@ -11,32 +11,31 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.BaseObservable
 import androidx.databinding.BindingAdapter
-import com.vrgsoft.reddittoppub.R
 import com.vrgsoft.reddittoppub.model.Publication
 import java.io.File
 import java.io.FileOutputStream
+import java.io.Serializable
 
-class PublicationViewModel(private var publication: Publication) : BaseObservable() {
+class PublicationViewModel(private var publication: Publication) : BaseObservable(), Serializable {
 
+    private var id: String = publication.id
     private var author: String = publication.author
     private var created: Long = publication.created
     private var thumbnail: String = publication.thumbnail
     private var numComments: Int = publication.numComments
     private var bitmapThumbnail: Bitmap? = publication.bitmapThumbnail
-    private val TAG: String = "PublicationViewModel"
 
     companion object {
         @BindingAdapter("imageUrl")
         @JvmStatic
-        fun loadImage(imageView: ImageView, bitmap: Bitmap/* uri: String*/) {
-            Log.i("TAG", "bitmap")
+        fun loadImage(imageView: ImageView, bitmap: Bitmap?) {
+            if (bitmap == null) {
+                return
+            }
             imageView.setImageBitmap(bitmap)
-
-            //if (bitmap != null) {
-                //imageView.setImageResource(R.drawable.ic_launcher_foreground)
-            //}
-            // https://medium.com/@gunayadem.dev/boost-your-android-apps-with-koin-and-coroutines-using-mvvm-in-kotlin-d30fe436ab4c
-            // https://medium.com/@gunayadem.dev/add-a-click-listener-to-your-adapter-using-mvvm-in-kotlin-part-2-9dce852e96d5
+            imageView.layoutParams.width = 500
+            imageView.layoutParams.height = 500
+            //imageView.requestLayout()
         }
     }
 
@@ -50,7 +49,7 @@ class PublicationViewModel(private var publication: Publication) : BaseObservabl
     }
 
     // сохранение картинки
-    fun itemLongClicked(context: Context, bitmapThumbnail: Bitmap) {
+    fun itemLongClicked(context: Context, bitmapThumbnail: Bitmap?) {
         try {
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
@@ -59,16 +58,19 @@ class PublicationViewModel(private var publication: Publication) : BaseObservabl
             }
 
             val file = File(path, "img.jpg")
-            val out = FileOutputStream(file).use {
-                bitmapThumbnail.compress(Bitmap.CompressFormat.JPEG, 85, it)
+            FileOutputStream(file).use {
+                bitmapThumbnail?.compress(Bitmap.CompressFormat.JPEG, 85, it)
             }
 
-            Log.i("Seiggailion", "Image saved.")
             Toast.makeText(context, "Image is downloaded", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Log.i("Seiggailion", "Failed to save image.")
+            Log.i("PublicationViewModel", "ErrorMessage - " + e.message)
             Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun getID(): String {
+        return id
     }
 
     fun getAuthor(): String {
@@ -76,7 +78,7 @@ class PublicationViewModel(private var publication: Publication) : BaseObservabl
     }
 
     fun getCreated(): String {
-        return " $created hours ago"
+        return "$created hours ago"
     }
 
     fun getThumbnail(): String {
@@ -87,7 +89,7 @@ class PublicationViewModel(private var publication: Publication) : BaseObservabl
         return "$numComments Comments"
     }
 
-    fun getBitmapThumbnail(): Bitmap {
-        return bitmapThumbnail!!
+    fun getBitmapThumbnail(): Bitmap? {
+        return bitmapThumbnail
     }
 }
